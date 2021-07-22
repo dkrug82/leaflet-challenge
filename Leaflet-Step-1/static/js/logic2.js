@@ -17,8 +17,7 @@ var lightmap = L.tileLayer("https://api.mapbox.com/styles/v1/mapbox/{id}/tiles/{
 // Create the map object with options
 var map = L.map("map", {
     center: [37.09, -95.7129],
-    zoom: 4,
-    layers: [lightmap, earthquakes]
+    zoom: 4
 });
 
 lightmap.addTo(map);
