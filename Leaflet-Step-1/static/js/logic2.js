@@ -1,3 +1,4 @@
+// Created url variable
 var url = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geojson"
 
 d3.json(url).then(function (data) {
@@ -16,12 +17,13 @@ var lightmap = L.tileLayer("https://api.mapbox.com/styles/v1/mapbox/{id}/tiles/{
 // Create the map object with options
 var map = L.map("map", {
     center: [37.09, -95.7129],
-    zoom: 5,
+    zoom: 4,
     //layers: [lightmap, earthquakes]
 });
 
 lightmap.addTo(map);
 
+// read in data from url
 d3.json(url).then(function (data) {
     function createMarkers(feature) {
         return {
@@ -34,11 +36,11 @@ d3.json(url).then(function (data) {
             fillOpacity: 0.8
         }
     }
-
+    // Created funtion to return the radius of each circle marker
     function radius(mag) {
         return mag * 4;
     }
-
+    // Created function to determine the color of each marker
     function color(depth) {
 
         switch (true) {
@@ -56,6 +58,8 @@ d3.json(url).then(function (data) {
                 return "green";
         }
     }
+
+    // Called the data and placed each marker on the map
     L.geoJson(data, {
         pointToLayer: function (feature, latlng) {
             return L.circleMarker(latlng);
@@ -66,15 +70,14 @@ d3.json(url).then(function (data) {
         }
     }).addTo(map);
 
+    // Created the legend
     var legend = L.control({ position: 'bottomright' });
 
     legend.onAdd = function () {
-
         var div = L.DomUtil.create('div', 'info legend'),
             grades = [-10, 10, 30, 50, 70, 90],
             colors = ["green", "greenyellow", "yellow", "orange", "darkorange", "red"];
 
-        // loop through our density intervals and generate a label with a colored square for each interval
         for (var i = 0; i < grades.length; i++) {
             div.innerHTML +=
                 '<ui style="background:' + color(grades[i] + 1) + '">&nbsp&nbsp</ui> ' +
